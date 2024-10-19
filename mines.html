@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="static/js/jquery.imgexplode.js"></script>
+    <script src="./static/js/jquery.imgexplode.js"></script>
 
     <title>Mines</title>
 
@@ -13,7 +13,7 @@
     <style>
         @font-face {
             font-family: 'Intro';
-            src: url('static/intro.otf') format('opentype');
+            src: url('.static/intro.otf') format('opentype');
         }
 
         body {
@@ -491,7 +491,7 @@
 </head>
 <body>
     <header>
-        <img src="static/logo.jpg" alt="Logo">
+        <img src="./static/logo.jpg" alt="Logo">
         <span>GAMBLE SOFT</span>
     </header>
     <canvas id="particleCanvas"></canvas> <!-- Добавленный элемент canvas -->
@@ -510,7 +510,7 @@
 
     <div style="text-align:center;">
         <button id="explodeButton">
-            <img src="static/play.png" alt="Play" style="width: 24px; height: 24px;">
+            <img src="./static/play.png" alt="Play" style="width: 24px; height: 24px;">
         </button>
     </div>
     <!-- <div class="tab"> -->
@@ -535,7 +535,7 @@
                     const square = $('<div>', { class: 'square' });
                     const icon = $('<img>', {
                         class: 'icon',
-                        src: "static/icons/minesstar.svg",
+                        src: "./static/icons/minesstar.svg",
                         alt: 'icon'
                     });
                     squareWrapper.append(square).append(icon);
@@ -601,7 +601,7 @@
             // Функция для взрыва квадратов
             function triggerExplosion() {
                 const squares = $('.square');
-                const audio = new Audio('static/startest.mp3'); // Путь к вашему звуку
+                const audio = new Audio('./static/startest.mp3'); // Путь к вашему звуку
                 let starCount;
                 switch (trapCount) {
                     case 1:

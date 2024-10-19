@@ -12,7 +12,7 @@
     <style>
         @font-face {
             font-family: 'Intro';
-            src: url('/static/intro.otf') format('opentype');
+            src: url('./static/intro.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
         }
@@ -23,7 +23,7 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            background: url('/static/footfon.JPEG') no-repeat center center; /* Установка фонового изображения */
+            background: url('./static/footfon.JPEG') no-repeat center center; /* Установка фонового изображения */
             background-size: cover; /* Изображение будет растянуто на всю площадь экрана */
             padding: 0;
             box-sizing: border-box;
@@ -39,7 +39,7 @@
             display: grid;
             justify-content: center;
             align-items: center;
-            background: url('/static/varana.png') no-repeat center center;
+            background: url('./static/varana.png') no-repeat center center;
             background-size: contain;
             padding-top: 10%;
             grid-template-columns: repeat(5, 1fr);
@@ -53,7 +53,7 @@
             width: 100%;
             height: 0;
             padding-bottom: 60%;
-            background-image: url('/static/ball.png');
+            background-image: url('./static/ball.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -67,7 +67,7 @@
         }
 
         .pulsating {
-            background-image: url('/static/ballred.png');
+            background-image: url('./static/ballred.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -76,7 +76,7 @@
         }
 
         .replaced {
-            background-image: url('/static/football.png');
+            background-image: url('./static/football.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -354,7 +354,7 @@
 </head>
 <body>
     <header>
-        <img src="/static/logo.jpg" alt="Logo">
+        <img src="./static/logo.jpg" alt="Logo">
         <span>GAMBLE SOFT</span>
     </header>
     <div class="counter-container">

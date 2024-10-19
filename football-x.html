@@ -6,21 +6,15 @@
     <title>Football X</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Angkor&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Angkor&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         @font-face {
             font-family: 'Intro';
-            src: url('/static/intro.otf') format('opentype');
+            src: url('./static/intro.otf') format('opentype');
         }
         * {
             margin: 0;
@@ -339,7 +333,7 @@
 </head>
 <body>
 <header>
-        <img src="/static/logo.jpg" alt="Logo">
+        <img src="./static/logo.jpg" alt="Logo">
         <span>GAMBLE SOFT</span>
     </header>
     <div class="container">
@@ -363,12 +357,12 @@
         </div>
 
 
-        <img src="/static/foot/logo.png" alt="Logo" class="logo">
+        <img src="./static/foot/logo.png" alt="Logo" class="logo">
         <div class="coefficient hidden">x0.00</div>
 
         <div class="placeholder">
             <div class="question-mark">?</div>
-            <img src="/static/foot/1.png" alt="Footballer" class="footballer hidden" id="footballer">
+            <img src="./static/foot/1.png" alt="Footballer" class="footballer hidden" id="footballer">
         </div>
 
         <button class="button" onclick="revealFootballer()">START HACK</button>
@@ -381,7 +375,7 @@
         }
     }
 
-    const footballers = ['/static/foot/1.png', '/static/foot/2.png', '/static/foot/3.png', '/static/foot/4.png', '/static/foot/5.png'];
+    const footballers = ['./static/foot/1.png', './static/foot/2.png', './static/foot/3.png', './static/foot/4.png', './static/foot/5.png'];
 
     function revealFootballer() {
         // Убираем знак вопроса
