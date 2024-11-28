@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type">
+    <title>Signals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <div class="container">
+            <div id="background" class="background"></div>
+            <h1 id="signalText" class="signal">1</h1>
+            <button onclick="changeSignal()" id="signalButton" class="signal-button"></button>
+        </div>
+    </main>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: rgba(215, 215, 215, 0.763);
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .signal {
+            color: white;
+            font-size: 24vmax;
+            font-weight: 1000;
+            text-shadow: 0 0 1.5vmax rgba(0, 0, 0, 0.4);
+        }
+
+        .signal-button {
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            position: absolute;
+        }
+    </style>
+    <script>
+        const gradients = [
+            ["a600f1", "4e1dfb"], 
+            ["ec0047", "ff8201"],
+            ["7be75e", "0a50ff"],
+            ["5cace4", "0949ff"],
+            ["5149f0", "e805f7"],
+            ["e805f7", "9a42f6"],
+            ["f7bd6d", "f75c69"],
+            ["fea30a", "fb5a34"],
+            ["0fd437", "0ddeb4"],
+        ]
+
+        const signalButton = document.getElementById("signalButton");
+        const signalText = document.getElementById("signalText");
+        const background = document.getElementById("background");
+
+        function changeSignal() {
+            let min = 1, max = 3;
+            let newSignal = Math.floor(Math.random() * (max+1 - min) + min);
+            signalText.innerText = `${newSignal}`;
+
+            let gradientIndex = Math.floor(Math.random() * gradients.length);
+            let gradient = gradients[gradientIndex]
+            background.style.backgroundImage = `linear-gradient(#${gradient[0]}, #${gradient[1]})`;
+        }
+
+        changeSignal();
+    </script>
+</body>
+</html>
