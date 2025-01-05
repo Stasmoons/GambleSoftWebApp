@@ -42,14 +42,7 @@ function animateNumber(element, start, end, duration) {
 }
 
 
-submit.onclick = function() {
-    betContainer.classList.add("hidden");
-
-    balloon.classList.add("balloon-big");
-    restartButton.classList.remove("hidden");
-
-    const selectedBet = parseInt(betSelect.value, 10);
-
+function getSignal(selectedBet) {
     let minRandom, maxRandom;
 
     // Логика зависимости диапазона от ставки
@@ -74,27 +67,37 @@ submit.onclick = function() {
     }
     minRandom *= 100;
     maxRandom *= 100;
-    
+
+    return generateNumber(minRandom, maxRandom) / 100;
+}
+
+
+function showSignal() {
+    const selectedBet = parseInt(betSelect.value, 10);
+
     // Генерируем новое число и запускаем анимацию
-    const randomFloat = generateNumber(minRandom, maxRandom) / 100; // Делим на 100 для получения дробного числа
+    const randomFloat = getSignal(selectedBet); // Делим на 100 для получения дробного числа
 
     // Добавляем класс для появления текста с задержкой
     setTimeout(() => {
         signalDisplay.classList.remove("hidden");
     }, 200);
     animateNumber(signal, 0, randomFloat, 1000); // Анимация от 0 до сгенерированного числа за 1 секунду
+}
 
+
+submit.onclick = function() {
+    betContainer.classList.add("hidden");
+
+    balloon.classList.add("balloon-big");
+    restartButton.classList.remove("hidden");
+
+    showSignal();
 }
 // Кнопка рестарт
 restartButton.onclick = function() {
    // Скрываем signalDisplay сразу
-   signalDisplay.classList.add("hidden");
-
-   // Задержка для других действий
-   setTimeout(() => {
-       playAnim(restartButton.querySelector("img"), "spin-on-click");
-       betContainer.classList.remove("hidden");
-       balloon.classList.remove("balloon-big");
-       restartButton.classList.add("hidden");
-   }, 50); // Задержка 500 ms перед другими действиями
+//    signalDisplay.classList.add("hidden");    
+    playAnim(restartButton.querySelector("img"), "spin-on-click");
+    showSignal();
 };
