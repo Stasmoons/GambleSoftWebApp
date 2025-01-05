@@ -1,4 +1,7 @@
+const controlsSection = document.getElementById("controlsSection");
 const restartButton = document.getElementById("restart");
+const changeBetButton = document.getElementById("changeBet");
+
 const signalDisplay = document.getElementById("signalDisplay");
 const signal = document.getElementById("signal");
 const balloon = document.getElementById("balloonImg");
@@ -90,14 +93,27 @@ submit.onclick = function() {
     betContainer.classList.add("hidden");
 
     balloon.classList.add("balloon-big");
-    restartButton.classList.remove("hidden");
+    controlsSection.classList.remove("hidden");
 
     showSignal();
 }
 // Кнопка рестарт
-restartButton.onclick = function() {
-   // Скрываем signalDisplay сразу
-//    signalDisplay.classList.add("hidden");    
+restartButton.onclick = function() { 
     playAnim(restartButton.querySelector("img"), "spin-on-click");
     showSignal();
 };
+
+
+changeBetButton.onclick = function() {
+    // Скрываем signalDisplay сразу
+   signalDisplay.classList.add("hidden");
+
+   // Задержка для других действий
+   setTimeout(() => {
+        betContainer.classList.remove("hidden");
+   }, 400); // Задержка 500 ms перед другими действиями
+
+   playAnim(restartButton.querySelector("img"), "spin-on-click");
+    balloon.classList.remove("balloon-big");
+   controlsSection.classList.add("hidden");
+}
