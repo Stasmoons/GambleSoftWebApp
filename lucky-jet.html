@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Aviator</title>
+  </head>
+  <body>
+      
+  <style>
+    /* ÐžÐ±Ñ‰Ð¸Ðµ ÑÑ‚Ð¸Ð»Ð¸ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: "Rubik", sans-serif;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(#141414, #2b0220);
+  color: #ffffff;
+}
+
+select:active,
+select:focus {
+  outline: none
+}
+
+.b-none {
+  display: none;
+  visibility: hidden;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+.b-show {
+  display: block;
+  animation: showBlock 1s linear forwards;
+}
+
+@keyframes showBlock {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.instructions {
+  position: absolute;
+  z-index: 990;
+  width: 100%;
+  /*height: 100vh; */
+  top: 0;
+  background: rgba(61, 61, 61, 0.8)
+}
+
+.block-content {
+  margin-bottom: 10px;
+}
+
+.instructions-content {
+  padding: 30px 20px 0 20px;
+}
+
+.block-content p {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/*Ð¨Ð°Ð¿ÐºÐ°*/
+
+.header {
+  height: 110px;
+
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+
+  border-bottom: 5px solid #ff00ea;
+  margin-bottom: 100px;
+}
+
+.header-inner {
+  position: absolute;
+  text-align: left;
+  top: 22px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+
+.header-logo-text {
+  font-family: 'DrukWideCyr-Bold', sans-serif;
+  font-size: 1.5em;
+  font-weight: 0;
+  position: absolute;
+  left: 8%;
+  text-align: left;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  /* margin-top: -10px; */
+}
+
+
+.header-inner p {
+  text-align: left;
+}
+
+
+/* .header-lang {
+  width: 60px;
+  height: 40px;
+
+  padding: 2px 0px 2px 2px;
+
+  background: #2F2F2E;
+
+  border: none;
+  border-radius: 10px;
+
+  position: absolute;
+  right: 16px;
+
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 900;
+} */
+
+.header-logo-img {
+  background-image: url('assets/icon/menu/logo.jpg');
+  background-position: center;
+  background-size: cover;
+  border: none;
+  border-radius: 50%;
+  position: absolute;
+  right: 8%;
+  width: 65px;
+  height: 65px;
+  vertical-align: center;
+  margin-top: -8px;
+}
+
+/*ÐšÐ½Ð¾Ð¿ÐºÐ¸ Ð¼ÐµÐ½ÑŽ*/
+.menu {
+  position: absolute;
+  right: 10%;
+  bottom: 20px;
+  left: 10%;
+  background: #2a2228;
+  border-radius: 20px;
+
+  height: 10vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+.menu-button-inner {
+  position: relative;
+  width: 260px;
+
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.menu-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 120px;
+  height: 75px;
+
+  background: none;
+  border: none;
+
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 400;
+
+  cursor: pointer;
+  z-index: 1;
+}
+
+.menu-button img {
+  margin-bottom: 5px;
+  width: 30px;
+  height: 30px;
+}
+
+.menu-button-active {
+  background: #1B1B1A;
+  border-radius: 20px;
+  width: 90px;
+  height: 71px;
+  position: absolute;
+  z-index: 0;
+}
+
+.menu-button-position {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*Ð’Ñ‹Ð±Ð¾Ñ€ Ð¸Ð³Ñ€Ñ‹*/
+
+.choose div{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 20px 20px;
+  width: 80vw;
+}
+
+.choose p {
+  margin-top: 6vh;
+  font-size: 1.8em;
+  font-weight: 450;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.choose-card {
+  display: flex;
+  flex-direction: column;
+  width: 60vw;
+  height: 40vh;
+  padding: 0px;
+
+  background: #2F2F2E;
+  border: 2px solid white;
+  border-radius: 20px;
+}
+
+.choose-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 60vw;
+  height: 70vh;
+
+  background-size:contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#aviator-go {
+  background-image: url("assets/icon/choose/aviator.png");
+}
+
+#mines-go {
+  background-image: url("assets/icon/choose/mines.png");
+}
+
+#luckyjet-go {
+  background-image: url("assets/icon/choose/luckyjet.png");
+}
+
+.choose {
+  position: absolute;
+  top: 90px;
+}
+
+.choose-button:not(:first-child) {
+  margin-top: 15px;
+}
+
+/*info*/
+.info-inner {
+  display: flex;
+  flex-direction: column;
+
+  background: #2F2F2E;
+  border-radius: 20px;
+}
+
+.info-title {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.info-text {
+  font-size: 11px;
+  width: 300px;
+  margin-bottom: 25px;
+  font-weight: 700;
+  padding: 10px;
+}
+
+/*channel*/
+
+.channel-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.channel-title {
+  font-size: 24px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.channel-button {
+  position: relative;
+  width: 270px;
+  height: 52px;
+  background: #29B6F6;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+        .luckyjet {
+  width: 100%;
+  font-family: "Rubik", sans-serif;
+}
+
+.luckyjet-inner {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.luckyjet-background {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("static/luckyjet-bg.png");
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
+.luckyjet-logo-game {
+  width: 250px;
+  z-index: 1;
+}
+
+.luckyjet-button-back {
+  position: absolute;
+  top: 30px;
+  left: 20px;
+  cursor: pointer;
+  z-index: 500;
+}
+
+.luckyjet-button-back button {
+  cursor: pointer;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
+  position: relative;
+  background: #BA60FD;
+}
+
+.luckyjet-button-back button img {
+  display: flex;
+  margin: 0 auto;
+}
+
+.luckyjet-pers-animate {
+  position: absolute;
+  left: -205px;
+  top: 138px;
+  z-index: 0;
+  width: 200px;
+  animation: cowmove 10s infinite;
+}
+
+@keyframes cowmove {
+  0% {
+    transform: translateX(0px) rotateY(0deg);
+  }
+
+  49% {
+    transform: translateX(200px) translateY(-25px) rotateY(0deg);
+  }
+
+  50% {
+    transform: translateX(200px) translateY(-25px) rotateY(0deg);
+  }
+
+  100% {
+    transform: translateX(0px) rotateY(0deg);
+  }
+}
+
+
+.luckyjet-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 290px;
+}
+
+.luckyjet-error-notification {
+  width: 300px;
+  height: 50px;
+  position: absolute;
+  top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -25px;
+  clip-path: inset(0px round 10px 10px);
+  transition: all .2s;
+  transform: translateY(-99px);
+  z-index: 999;
+}
+
+.luckyjet-error-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  height: 50px;
+  background: #FFEBEB;
+  border-radius: 10px;
+  margin-bottom: -52px;
+}
+
+.luckyjet-icon-error {
+  z-index: 2;
+}
+
+.luckyjet-error-exit {
+  position: absolute;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  z-index: 2;
+  cursor: pointer;
+  background: #FFC2C2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.luckyjet-text-error {
+  color: #000000;
+  font-size: 12px;
+  font-weight: 900;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding-left: 10px;
+  padding-right: 45px;
+}
+
+.luckyjet-error-progress {
+  width: 287px;
+  height: 3px;
+  background: linear-gradient(90deg, #E00000 0%, #E00000 100%) left /0% 100% no-repeat #D9D9D9;
+  z-index: 4;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 5px;
+}
+
+@keyframes animateErrorProgress {
+  100% {
+    background-size: 100% 100%;
+  }
+}
+
+.luckyjet-top-content {
+  position: absolute;
+  top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.luckyjet-name-bot {
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: black 0 0 30px, black 0 0 30px, black 0 0 30px;
+}
+
+.luckyjet-print-signal {
+  position: absolute;
+  margin-bottom: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 217px;
+  height: 217px;
+  background-color: #34004c;
+  border: 4px solid white;
+  border-radius: 50%;
+  font-size: 3.2em;
+  font-weight: 500;
+  transition: all .5s;
+  z-index: 10;
+}
+
+.luckyjet-print-signal span {
+  text-transform: uppercase;
+  font-size: 20px;
+  text-align: center;
+}
+
+
+.luckyjet-stop-signal-time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  margin: 25px auto;
+  width: 230px;
+  transition: all .5s;
+}
+
+.luckyjet-stop-timer {
+  font-size: 20px;
+  font-weight: 900;
+  height: 35px;
+}
+
+.luckyjet-stop-progress {
+  width: 230px;
+  height: 18px;
+  background: linear-gradient(90deg, #BA60FD 0%, #218288 100%) left /0% 100% no-repeat #D9D9D9;
+  border-radius: 15px;
+}
+
+@keyframes animateProgress {
+  100% {
+    background-size: 100% 100%;
+  }
+}
+
+.luckyjet-button-content {
+  position: absolute;
+  top: 80px;
+}
+
+.luckyjet-button-game {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 220px;
+}
+
+.luckyjet-get-signal, .luckyjet-get-signal-two {
+  /* box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05); */
+  border-radius: 30px;
+  font-weight: 900;
+  font-size: 24px;
+  background-color: #e801e8;
+  color: white;
+  text-shadow: white 0 0 30px;
+}
+
+
+.luckyjet-get-signal {
+  position: relative;
+  height: 65px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
+  z-index: 0;
+}
+
+.luckyjet-get-signal-two {
+  position: absolute;
+  height: 65px;
+  width: 220px;
+  border: none;
+  cursor: pointer;
+  z-index: -1;
+  transition: all .2s;
+}
+
+/* .luckyjet-get-signal {
+  position: relative;
+  height: 56px;
+  border: none;
+  background: linear-gradient(90deg, #BA60FD 0%, #218288 100%);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 30px;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all .2s;
+  z-index: 0;
+}
+
+.luckyjet-get-signal-two {
+  position: absolute;
+  width: 220px;
+  height: 56px;
+  border: none;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 30px;
+  background: linear-gradient(90deg, #BA60FD 0%, #218288 100%);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  z-index: -1;
+  transition: all .2s;
+} */
+
+.luckyjet-game-here {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 220px;
+  height: 56px;
+  background: white;
+  font-size: 22px;
+  /* box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.05); */
+  border-radius: 30px;
+  color: black;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .2s;
+  z-index: 4;
+}
+
+.luckyjet-get-signal::before,
+.luckyjet-get-signal-two::before {
+  content: "";
+  position: absolute;
+  inset: 0px;
+  z-index: -1;
+  background: linear-gradient(90deg, #e801e8 1%, #ff01dd 100%);
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+  opacity: 0.6;
+  filter: blur(15px);
+  border-radius: 30px;
+}
+
+.luckyjet-game-here::before {
+  content: "";
+  position: absolute;
+  inset: 0px;
+  z-index: -1;
+  background: linear-gradient(90deg, white 0%, white 80%);
+  /* box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); */
+  filter: blur(5px);
+  border-radius: 30px;
+}
+
+.luckyjet-get-signal:active,
+.luckyjet-game-here:active,
+.luckyjet-get-signal-two:active {
+  transform: scale(95%);
+}
+
+.luckyjet-deactivate {
+  opacity: 0;
+}
+  </style>
+  
+    <!-- <header id="header" class="header">
+      <div class="header-inner">
+        <div class="header-line"></div>
+        <p class="header-logo-text">GOODY <br/>SIGNALS</p>
+  
+        <div class="header-logo-img">  </div>
+      </div>
+    </header> -->
+  
+    
+<section id="page-luckyjet" class="luckyjet">
+    <div class="luckyjet-inner">
+
+      <div class="luckyjet-background"></div>
+
+
+      <div id="luckyjet-error-notification" class="luckyjet-error-notification luckyjet-deactivate">
+        <div class="luckyjet-error-background"></div>
+        <img class="luckyjet-icon-error" src="static/error.svg" alt="error">
+        <p id="luckyjet-text-error" class="luckyjet-text-error lng-notification">Wait for the time to expire</p>
+        <div id="luckyjet-error-exit" class="luckyjet-error-exit">
+          <img src="static/error-exit.svg" alt="exit">
+        </div>
+        <div id="luckyjet-error-progress" class="luckyjet-error-progress"></div>
+      </div>
+
+      <div class="luckyjet-container">
+        <div class="luckyjet-print-signal" id="luckyjet-print-signal"><span class="lng-allGameStartOne">Click on<br>"GET
+            SIGNAL"</span></div>
+        <div class="luckyjet-button-content">
+          <div class="luckyjet-stop-signal-time luckyjet-deactivate" id="luckyjet-stop-signal-time-block">
+            <p class="luckyjet-stop-timer" id="luckyjet-stop-timer"></p>
+            <div class="luckyjet-stop-progress" id="luckyjet-stop-progress"></div>
+          </div>
+          <div class="luckyjet-button-game">
+            <button class="luckyjet-get-signal lng-allGameGetSignal" id="luckyjet-get-signal">GET SIGNAL</button>
+            <button class="luckyjet-get-signal-two luckyjet-deactivate lng-allGameGetSignal"
+              id="luckyjet-get-signal-two">GET
+              SIGNAL</button>
+            <a href="https://1wzlcz.life/casino/play/1play_1play_luckyjet"
+              class="luckyjet-game-here lng-allGameGameHere" style="display: none;">GAME HERE</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- <img class="luckyjet-pers-animate" src="https://i.postimg.cc/NF4FLHb6/pers.gif" alt=""> -->
+      <img class="luckyjet-pers-animate" src="static/lucky-jet-pers.png" alt="">
+    </div>
+  </section>
+  
+  
+    <script>
+      //LuckyJet
+    const luckyjetGetSignal = document.getElementById("luckyjet-get-signal");
+    const luckyjetStopSignalTimeBlock = document.getElementById("luckyjet-stop-signal-time-block");
+    const luckyjetPrintSignal = document.getElementById("luckyjet-print-signal");
+    const luckyjetStopProgress = document.getElementById("luckyjet-stop-progress");
+    const luckyjetErrorNotification = document.getElementById("luckyjet-error-notification");
+    const luckyjetErrorProgress = document.getElementById("luckyjet-error-progress");
+    const luckyjetTextError = document.getElementById("luckyjet-text-error");
+    const luckyjetGetSignalTwo = document.getElementById("luckyjet-get-signal-two");
+    const luckyjetErrorExit = document.getElementById("luckyjet-error-exit");
+      const timerSeconds = 10;
+  
+      const pageLuckyjet = document.getElementById("page-luckyjet");
+      pageLuckyjet.style["z-index"] = "100"
+      pageLuckyjet.style["position"] = "relative"
+      pageLuckyjet.style["top"] = "0px";
+
+        //Функция для генерации случайного числа
+        function getRandomFloat(min, max, decimals) {
+        const str = (Math.random() * (max - min) + min).toFixed(
+            decimals,
+        );
+        return parseFloat(str);
+        }
+
+        //Нажатие на кнопку "GET SIGNAL"
+        luckyjetGetSignal.onclick = function () {
+        let receivingSignal = getRandomFloat(1.00, 3.99, 2);
+
+        if ((receivingSignal.toString().length == 3)) {
+            receivingSignal += "0";
+        } if ((receivingSignal.toString().length == 1)) {
+            receivingSignal += ".00";
+        }
+        luckyjetPrintSignal.innerHTML = `${receivingSignal}${"x"}`;
+        luckyjetPrintSignal.classList.remove("luckyjet-deactivate");
+        luckyjetGoTimer(timerSeconds);
+        luckyjetGetSignal.disabled = true;
+        }
+
+        //Нажатие на кнопку "GET SIGNAL", когда идёт таймер 60 секунд.
+        luckyjetGetSignalTwo.onclick = function () {
+        luckyjetGetSignalTwo.disabled = true;
+        luckyjetGoTimerError(5, "go");
+        }
+
+
+
+        //Таймер после получения сигнала
+        function luckyjetGoTimer(time) {
+        const timer = setInterval(() => {
+            if (time >= 1) {
+            luckyjetGetSignalTwo.classList.remove("luckyjet-deactivate");
+            luckyjetGetSignal.classList.add("luckyjet-deactivate");
+            luckyjetGetSignalTwo.style["z-index"] = "5";
+            luckyjetStopProgress.style["animation"] = `animateProgress ${timerSeconds}s linear infinite`;
+            luckyjetStopSignalTimeBlock.classList.remove("luckyjet-deactivate");
+            let stopTimer = document.getElementById("luckyjet-stop-timer");
+            let hash = window.location.hash;
+            hash = hash.substr(1);
+            if (hash == "en") {
+                stopTimer.innerHTML = `${time--}${"<span> seconds</span>"}`;
+                timerr = time;
+            } if (hash == "ru") {
+                stopTimer.innerHTML = `${time--}${"<span> секунд</span>"}`;
+                timerr = time;
+            }
+            luckyjetGetSignal.disabled = true;
+            } else {
+            luckyjetGetSignalTwo.classList.add("luckyjet-deactivate");
+            luckyjetGetSignal.classList.remove("luckyjet-deactivate");
+            luckyjetGetSignalTwo.style["z-index"] = "-1";
+            luckyjetStopSignalTimeBlock.classList.add("luckyjet-deactivate");
+            luckyjetStopProgress.style["animation"] = "none";
+            clearInterval(timer);
+            luckyjetGetSignal.disabled = false;
+            }
+        }, 1000)
+        }
+
+        //Работа уведомления ошибки
+        function luckyjetGoTimerError(time) {
+        const timer = setInterval(() => {
+            if (time >= 1) {
+            time--;
+            luckyjetErrorNotification.classList.remove("luckyjet-deactivate");
+            luckyjetErrorProgress.style["animation"] = "animateErrorProgress 5s linear infinite";
+            luckyjetErrorNotification.style["transform"] = "translateY(0px)";
+            } else {
+            luckyjetErrorNotification.style["transform"] = "translateY(-99px)";
+            luckyjetErrorProgress.style["animation"] = "none";
+            clearInterval(timer);
+            luckyjetGetSignalTwo.disabled = false;
+            luckyjetErrorNotification.classList.add("luckyjet-deactivate");
+            }
+            luckyjetErrorExit.onclick = function () {
+            luckyjetErrorNotification.classList.add("luckyjet-deactivate");
+            luckyjetErrorNotification.style["transform"] = "translateY(-99px)";
+            luckyjetErrorProgress.style["animation"] = "none";;
+            clearInterval(timer);
+            luckyjetGetSignalTwo.disabled = false;
+            }
+        }, 1000)
+        }
+  
+  
+      location.href = window.location.pathname + "#en";
+  
+  const langArr = {
+    "choose": {
+      "en": "CHOOSE GAME",
+      "ru": "ВЫБРАТЬ ИГРУ",
+    },
+  
+    "info": {
+      "en": "Info",
+      "ru": "Инфо",
+    },
+  
+    "home": {
+      "en": "Home",
+      "ru": "Домой",
+    },
+  
+    "channel": {
+      "en": "channel",
+      "ru": "Канал"
+    },
+  
+    "infoTitle": {
+      "en": "INSTRUCTIONS",
+      "ru": "Инструкция",
+    },
+  
+    "infoMainContent": {
+      "en": "The bot is based on and trained using OpenAI's neural network cluster 🖥[ChatGPT-v4].<br><br>For training, the bot played 🎰over 8000 games.Currently, bot users successfully make 20-30% of their 💸capital daily!<br><br>The bot is still learning, and its accuracy is at 85%!<br>Follow these instructions for maximum profit:<br><br>🔸 1. Register at the 1WIN betting office.If it doesn’t open - use a VPN (Sweden).I use VPN Super Unlimited Proxy Access to signals will not be available without registration!<br>🔸 2. Deposit funds into your account.<br>🔸 3. Go to the 1win games section and select the game.<br>🔸 4. Request a signal from the bot and place bets based on the bot’s signals.<br>🔸 5. In case of a losing signal, we advise you to double (X2) your bet to fully cover the loss in the next signal.<br>",
+      "ru": "Бот основан и обучен с использованием нейронных сетей OpenAI 🖥[ChatGPT-v4].<br><br>Для обучения бот сыграл 🎰более 8000 игр. В настоящее время пользователи бота успешно зарабатывают 20-30% своих 💸 капитал ежедневно!<br><br>Бот все еще учится, и его точность составляет 85%!<br>Для получения максимальной прибыли следуйте этим инструкциям:<br><br>🔸 1. Зарегистрируйтесь в букмекерской компании 1WIN. Если не открывается - используйте VPN (Швеция). Я использую VPN Super Unlimited Proxy. Без регистрации доступ к сигналам будет невозможен!<br>🔸 2. Внесите средства на свой счет.<br>🔸 3. Зайдите в раздел 1win games и выберите игру.<br>🔸 4. Запросите сигнал от бота и делайте ставки по сигналам бота.<br>🔸 5. В случае проигрышного сигнала советуем удвоить (Х2) ваша ставка полностью покроет убыток в следующем сигнале.<br>"
+    },
+  
+    "channelTitle": {
+      "en": "Join our TG channel",
+      "ru": "Присоединяйтесь к нашему TG каналу",
+    },
+  
+    "channelButtton": {
+      "en": "JOIN CHANNEL",
+      "ru": "ПРИСОЕДИНИТЬСЯ",
+    },
+  
+    "allGameStartOne": {
+      "en": "CLICK ON<br>«GET SIGNAL»",
+      "ru": "НАЖМИТЕ НА<br>«ПОЛУЧИТЬ СИГНАЛ»",
+    },
+  
+    "allGameStartTwo": {
+      "en": "START",
+      "ru": "НАЧАТЬ"
+    },
+    "allGameGetSignal": {
+      "en": "GET SIGNAL",
+      "ru": "ПОЛУЧИТЬ СИГНАЛ",
+    },
+    "allGameGameHere": {
+      "en": "GAME HERE",
+      "ru": "ИГРАТЬ",
+    },
+    "notification": {
+      "en": "Wait for the time to expire",
+      "ru": "Подождите, пока истечет<br>время"
+    },
+  
+    "instOneOne": {
+      "en": "1. Chose game",
+      "ru": "1. Выберите игру",
+    },
+  
+    "instOneTwo": {
+      "en": "2. Change number of cells",
+      "ru": "2. Измените количество ячеек",
+    },
+  
+    "instOneThree": {
+      "en": "3. Select 6x15",
+      "ru": "3. Выберите 6x15",
+    },
+  
+    "instOneFour": {
+      "en": "4. Play Game",
+      "ru": "4. Начните играть",
+    },
+  
+    "instTwoTwo": {
+      "en": "2. Chose 3 traps",
+      "ru": "2. Выберите 3 ловушки"
+    }
+  
+  }
+  
+  const allLang = ["en", "ru"]
+  
+    </script>
+  </body>
+  
+  </html>
