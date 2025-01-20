@@ -23,15 +23,20 @@
             }
 
             .gradient-bg {
+                /* background: url("static/mimines_bg.jpg"); */
+                background-size: cover;
+                background-position: 20%;
+                background-repeat: no-repeat;
+                /* filter: brightness(105%); */
                 background: linear-gradient(#117ccc, #0b44de);
             }
 
             .container {
+                padding: 10vh 0;
                 width: 90%;
                 display: flex;
-                justify-content: space-evenly;
+                justify-content: space-between;
                 flex-direction: column;
-                
             }
 
 
@@ -42,26 +47,31 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 3vmax;
+                margin-bottom: 5vh;
             }
 
             .title {
+                grid-area: title;
                 font-family: sans-serif;
                 font-size: 5vmax;
                 font-weight: bold;
                 text-align: center;
                 color: white;
+                text-shadow: 0 0 20px rgba(0, 0, 0, 1);
+                /* margin-bottom: 1.5vh; */
             }
 
             .mines-count-select {
+                grid-area: traps;
                 text-align: center;
                 font-size: 2.5vmax;
-                padding: 2%;
-                width: 50%;
-                border-radius: 10px;
-                outline: 1px solid #062b6e;
+                height: 6vh;
+                width: 97%;
+                border-radius: 20px;
+                outline: 1px solid #052577;
                 border: none;
                 color: white;
-                background-color: #0f4785;
+                background-color: #0835ab;
                 font-weight: bold;
             }
 
@@ -78,7 +88,7 @@
                 justify-content: center;
                 align-items: center;
 
-                margin-bottom: 8vh;
+                /* margin-bottom: 10vh; */
             }
 
 
@@ -142,13 +152,23 @@
 
             /* КНОПКИ УПРАВЛЕНИЯ */
             .controls {
-                display: flex;
+                display: grid;
+                grid-template-areas: 
+                    "title title"
+                    "traps traps"
+                    "restart get-signal";
                 justify-content: space-evenly;
+                justify-items: center;
+                row-gap: 3vh;
+        
+                /* justify-content: space-evenly;
                 align-items: center;
+                flex-direction: column; */
                 width: 100%;
             }
 
             .restart-button {
+                grid-area: restart;
                 background-color: #0835ab;
                 border: none;
                 height: 10vh;
@@ -181,6 +201,7 @@
 
 
             .get-signal {
+                grid-area: get-signal;
                 height: 10vh;
                 padding: 0 8vw;
                 font-size: large;
@@ -203,20 +224,38 @@
                 animation: turn-small ease-in 0.2s;
                 animation-iteration-count: 1;
             }
+            
+            @keyframes pulseAnim {
+                0%, 100% {
+                    transform: translateX(50%) translateY(-50%) rotate(45deg) scale(1);
+                }
+                50% {
+                    transform: translateX(50%) translateY(-50%) rotate(45deg) scale(1.25);
+                }
+            }
+
+            #change-style {
+                position: absolute; 
+                top: 0; 
+                right: 0; 
+                width: 8vmax; 
+                aspect-ratio: 1/1; 
+                transform: translateX(50%) translateY(-50%) rotate(45deg);
+                animation: 0.6s pulseAnim;
+                animation-delay: 1.5s;
+                animation-iteration-count: 3;
+                animation-timing-function: ease-in;
+                opacity: 0.5;
+            }
+
         </style>
 
-        <main class="main gradient-bg">
-            <div class="container">
-                <section class="top-content">
-                    <h1 class="title">MI MINES</h1>
+        <main class="main gradient-bg" id="gradient-bg">
+            <div class="container">  
+                <button id="change-style">
 
-                    <select id="minesCountSelect" class="mines-count-select">
-                        <option value="3">Traps: 3</option>
-                        <option value="2">Traps: 2</option>
-                        <option value="1">Traps: 1</option>
-                    </select>
-                </section>
-    
+                </button>
+
                 <section class="signals-container">
                     <div class="cell cell-disabled"><div class="cell_"></div></div>
                     <div class="cell cell-disabled"></div>
@@ -244,8 +283,19 @@
                     <div class="cell cell-disabled"></div>
                     <div class="cell cell-disabled"></div>
                 </section>
+
+                <!-- <section class="top-content"> -->
+                <!-- </section> -->
     
                 <section class="controls">
+                    <h1 class="title">MI MINES</h1>
+
+                    <select id="minesCountSelect" class="mines-count-select">
+                        <option value="3">Traps: 3</option>
+                        <option value="2">Traps: 2</option>
+                        <option value="1">Traps: 1</option>
+                    </select>
+
                     <button id="restart" class="restart-button">
                         <img src="static/reboot_arrow.png" class="restart-img"/>
                     </button>
@@ -340,6 +390,28 @@
             restartButton.onclick = function() {
                 playAnim(restartButton, "spin-on-click");
                 clearCells();  // Очищаем ячейки
+            }
+
+            // Фон
+            let bgId = 0;
+            let bgVariationsCount = 3;
+            const changeBgButton = document.getElementById("change-style");
+            const bg = document.getElementById("gradient-bg")
+
+            changeBgButton.onclick = function() {
+                bgId++;
+                if (bgId > bgVariationsCount-1) {
+                    bgId = 0;
+                }
+
+                let newStyle;
+                if (bgId == 0){
+                    newStyle = "linear-gradient(#117ccc, #0b44de)";
+                }
+                else {
+                    newStyle = `url("static/mimines_bg_${bgId}.jpg")`;
+                }
+                bg.style.background = newStyle;
             }
         </script>
     </body>
