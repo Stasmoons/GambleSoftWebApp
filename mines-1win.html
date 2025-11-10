@@ -102,7 +102,7 @@
                 align-items: center;
                 justify-content: center;
                 position: relative;
-                aspect-ratio: 2.6 / 2;
+                aspect-ratio: 2.5 / 2;
                 border-radius: 0.5vmax;
             }
 
@@ -306,12 +306,13 @@
                 <!-- </section> -->
     
                 <section class="controls">
-                    <h1 class="title">MI MINES</h1>
+                    <h1 class="title">1WIN MINES</h1>
 
-                    <select id="minesCountSelect" class="mines-count-select">
-                        <option value="3">Traps: 3</option>
-                        <option value="2">Traps: 2</option>
-                        <option value="1">Traps: 1</option>
+                    <select id="difficultySelect" class="mines-count-select">
+                        <option value="1">2 traps</option>
+                        <option value="2">3 traps</option>
+                        <option value="3">5 traps</option>
+                        <option value="4">7 traps</option>
                     </select>
 
                     <button id="restart" class="restart-button">
@@ -326,90 +327,74 @@
 
         </main>
         <script>
-            const getSignalButton = document.getElementById("getSignal");
-            const restartButton = document.getElementById("restart");
+        const getSignalButton = document.getElementById("getSignal");
+        const restartButton = document.getElementById("restart");
+        const cells = Array.from(document.getElementsByClassName("cell"));
+        const select = document.getElementById("difficultySelect");
 
-            const cells = document.getElementsByClassName("cell");
-            const cellsArray = Array.from(cells);
+        // вспомогательные функции
+        function generateNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
+        function playAnim(element, animatedClass) { 
+            element.classList.add(animatedClass);
+            element.addEventListener('animationend', () => {
+                element.classList.remove(animatedClass);
+            }, {once: true});
+        }
 
-            function generateNumber(min, max) {
-                // Генерирует сообщение
-                return Math.floor(Math.random() * (max - min + 1)) + min;
+        function clearCells() {
+            cells.forEach(cell => {
+                cell.classList.remove("cell-active");
+                cell.classList.add("cell-disabled");
+            });
+        }
+
+        // конфигурации уровней сложности
+        const modeToConfigMap = {
+            "1": { traps: 2, stars: [6, 9] },
+            "2": { traps: 3, stars: [5, 7] },
+            "3": { traps: 5, stars: [4, 5] },
+            "4": { traps: 7, stars: [2, 4] },
+        };
+
+        function getStarsCount() {
+            const mode = select.value;
+            const bounds = modeToConfigMap[mode].stars;
+            return generateNumber(bounds[0], bounds[1]);
+        }
+
+        // обработка кликов
+        getSignalButton.onclick = function() {
+            getSignalButton.disabled = true;
+            playAnim(getSignalButton, "small-on-click");
+            clearCells();
+
+            const starsCount = getStarsCount();
+            const signalIndexes = [];
+
+            while (signalIndexes.length < starsCount) {
+                const cellIndex = generateNumber(0, cells.length - 1);
+                if (!signalIndexes.includes(cellIndex)) signalIndexes.push(cellIndex);
             }
 
-            function playAnim(element, animatedClass) { 
-                // Добавляет класс анимации
-                element.classList.add(animatedClass);
-                
-                element.addEventListener('animationend', () => {
-                    element.classList.remove(animatedClass);
-                }, {once: true});
-            }
+            signalIndexes.forEach(index => {
+                const cell = cells[index];
+                cell.classList.remove("cell-disabled");
+                cell.classList.add("cell-active");
+            });
 
-            function clearCells() {
-                // Отключает все ячейки
-                cellsArray.forEach(cellElement => {
-                    cellElement.classList.remove("cell-active"); 
-                    cellElement.classList.add("cell-disabled");
-                }); 
-            }
+            setTimeout(() => {
+                getSignalButton.disabled = false;
+            }, 500);
+        };
 
-            function getStarsCount() {
-                const select = document.getElementById("minesCountSelect");
-                let trapsCount = select.options[select.selectedIndex].value;
-
-                const trapsToStarsMap = {
-                    "1": [5, 10],
-                    "2": [4, 7],
-                    "3": [3, 5]
-                }
-
-                const bounds = trapsToStarsMap[trapsCount];
-                const starsCount = generateNumber(bounds[0], bounds[1]);
-                return starsCount;
-            }
-
-            // Кнопка получения сигнала
-            getSignalButton.onclick = function() {
-                getSignalButton.disabled = true;
-
-                playAnim(getSignalButton, "small-on-click");  // Анимация прокрутки
-                clearCells();  // Очищаем ячейки
-
-                // Выбираем ячейки для активации
-                const signalIndexes = [];
-                const starsCount = getStarsCount();
-                    
-                while (signalIndexes.length < starsCount) {
-                    const cellIndex = generateNumber(0, cellsArray.length-1);
-
-                    if (signalIndexes.indexOf(cellIndex) === -1) {
-                        signalIndexes.push(cellIndex);
-                    }
-                }
-
-                // Активируем выбранные ячейки
-                signalIndexes.forEach(index => {
-                    const cellElement = cellsArray[index];
-                    
-                    // УБЕРИ ЭТУ СТРОКУ: playAnim(cellElement, "roll-cell");
-                    cellElement.classList.remove("cell-disabled"); 
-                    cellElement.classList.add("cell-active");
-                }); 
-
-                
-                setTimeout(() => {
-                    getSignalButton.disabled = false;
-                }, 500); // Ожидание полного завершения всех анимаций
-            }
-
-            // Кнопка рестарт
-            restartButton.onclick = function() {
-                const restartImg = restartButton.querySelector('.restart-img');
-                playAnim(restartImg, "spin-on-click"); // Анимируем только картинку
-                clearCells();  // Очищаем ячейки
-            }
+        restartButton.onclick = function() {
+            const restartImg = restartButton.querySelector('.restart-img');
+            playAnim(restartImg, "spin-on-click");
+            clearCells();
+        };
         </script>
     </body>
 </html>
