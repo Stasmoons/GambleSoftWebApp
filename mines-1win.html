@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <!-- <link rel="stylesheet" href="style.css"> -->
+        <title>SIGNALS</title>
+    </head>
+    <body>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                -webkit-tap-highlight-color: rgba(72, 72, 250, 0.1);
+            }
+
+            body {
+                overflow-x: hidden;
+                overflow-y: hidden;
+            }
+
+            .main {
+                overflow-x: hidden;
+                overflow-y: hidden;
+                max-width: 100vw;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+            }
+
+            .gradient-bg {
+                /* background: url("static/mimines_bg.jpg"); */
+                background-size: cover;
+                background-position: 20%;
+                background-repeat: no-repeat;
+                /* filter: brightness(105%); */
+                background: linear-gradient(#171318, #171318);
+            }
+
+            .container {
+                padding: 10vh 0;
+                width: 90%;
+                display: flex;
+                justify-content: space-between;
+                flex-direction: column;
+            }
+
+
+            /* ШАПКА */
+
+            .top-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 3vmax;
+                margin-bottom: 5vh;
+            }
+
+            .title {
+                grid-area: title;
+                font-family: sans-serif;
+                font-size: 5vmax;
+                font-weight: bold;
+                text-align: center;
+                color: white;
+                text-shadow: 0 0 20px rgba(0, 0, 0, 1);
+                /* margin-bottom: 1.5vh; */
+            }
+
+            .mines-count-select {
+                grid-area: traps;
+                text-align: center;
+                font-size: 2.5vmax;
+                height: 6vh;
+                width: 97%;
+                border-radius: 1vmax;
+                outline: 1px solid #052577;
+                border: none;
+                color: white;
+                background-color: #0835ab;
+                font-weight: bold;
+            }
+
+            /* СИГНАЛЫ */
+            .signals-container {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: repeat(5, 1fr);
+                column-gap: 0.8vmax;
+                row-gap: 0.8vmax;
+
+                justify-items: stretch;
+                justify-content: center;
+                align-items: center;
+
+                /* margin-bottom: 10vh; */
+            }
+
+            .cell {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                aspect-ratio: 2.6 / 2;
+                border-radius: 0.5vmax;
+            }
+
+            .cell::before {
+                content: "";
+                position: absolute;
+                width: 35%;
+                aspect-ratio: 1;
+                border-radius: 50%;
+            }
+
+
+            .cell-disabled {
+                background-color: #2a2a32;
+                border: 0.3vmax solid #313131;
+                /* box-shadow: 0 0.6vmax #062b6e; */
+            }
+
+            .cell-disabled::before {
+                background-image: url("static/1w.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 90%;
+                width: 80%;
+            }
+
+            .cell-active {
+                background: radial-gradient(circle at 50% 120%, #2a60b1, #161927);
+                /* border: 0.4vmax solid #2a60b1; */
+                transform: scale(0);
+                animation: pop-up 0.5s ease-out forwards;
+            }
+
+            .cell-active::before {
+                background-image: url("static/star.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 90%;
+                width: 55%;
+                transform: scale(0);
+                animation: star-pop 0.6s ease-out 0.2s forwards;
+            }
+
+            @keyframes pop-up {
+                0% {
+                    transform: scale(0);
+                    opacity: 0;
+                }
+                70% {
+                    transform: scale(1.1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes star-pop {
+                0% {
+                    transform: scale(0);
+                }
+                50% {
+                    transform: scale(1.2);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            .roll-cell {
+                animation: roll ease-out 0.8s;
+                animation-iteration-count: 1;
+            }
+
+
+            /* КНОПКИ УПРАВЛЕНИЯ */
+            .controls {
+                display: grid;
+                grid-template-areas: 
+                    "title title"
+                    "traps traps"
+                    "restart get-signal";
+                justify-content: space-evenly;
+                justify-items: center;
+                row-gap: 4vh;
+                width: 100%;
+            }
+
+            .restart-button {
+                grid-area: restart;
+                background-color: #0835ab;
+                border: none;
+                height: 10vh;
+                padding: 1%;
+                aspect-ratio: 1/1;
+                border-radius: 1vmax;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .restart-button {
+                grid-area: restart;
+                background-color: #0835ab;
+                border: none;
+                height: 10vh;
+                padding: 1%;
+                aspect-ratio: 1/1;
+                border-radius: 1vmax;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .restart-button img {
+                width: 70%;
+                aspect-ratio: 1;
+            }
+
+            .spin-on-click {
+                animation: spin-around ease-out 0.3s;
+                animation-iteration-count: 1;
+            }
+
+            @keyframes spin-around {
+                from {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .get-signal {
+                grid-area: get-signal;
+                height: 10vh;
+                padding: 0 8vw;
+                font-size: large;
+                font-weight: bold;
+                border-radius: 1vmax;
+                border: none;
+                color: white;
+                background: #36784c86;
+                border: 2px solid #36784c;
+            }
+
+            @keyframes turn-small {
+                from {
+                    transform: scale(0.9);
+                }
+                to {
+                    transform: scale(1);
+                }
+            }
+            .small-on-click {
+                animation: turn-small ease-in 0.2s;
+                animation-iteration-count: 1;
+            }
+            
+            @keyframes pulseAnim {
+                0%, 100% {
+                    transform: translateX(50%) translateY(-50%) rotate(45deg) scale(1);
+                }
+                50% {
+                    transform: translateX(50%) translateY(-50%) rotate(45deg) scale(1.25);
+                }
+            }
+        </style>
+
+        <main class="main gradient-bg" id="gradient-bg">
+            <div class="container">  
+                <section class="signals-container">
+                    <div class="cell cell-disabled"><div class="cell_"></div></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                    <div class="cell cell-disabled"></div>
+                </section>
+
+                <!-- <section class="top-content"> -->
+                <!-- </section> -->
+    
+                <section class="controls">
+                    <h1 class="title">MI MINES</h1>
+
+                    <select id="minesCountSelect" class="mines-count-select">
+                        <option value="3">Traps: 3</option>
+                        <option value="2">Traps: 2</option>
+                        <option value="1">Traps: 1</option>
+                    </select>
+
+                    <button id="restart" class="restart-button">
+                        <img src="static/reboot_arrow.png" class="restart-img"/>
+                    </button>
+                    <button id="getSignal" class="get-signal">
+                        GET SIGNAL
+                    </button>
+                </section>
+            </div>
+
+
+        </main>
+        <script>
+            const getSignalButton = document.getElementById("getSignal");
+            const restartButton = document.getElementById("restart");
+
+            const cells = document.getElementsByClassName("cell");
+            const cellsArray = Array.from(cells);
+
+
+            function generateNumber(min, max) {
+                // Генерирует сообщение
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function playAnim(element, animatedClass) { 
+                // Добавляет класс анимации
+                element.classList.add(animatedClass);
+                
+                element.addEventListener('animationend', () => {
+                    element.classList.remove(animatedClass);
+                }, {once: true});
+            }
+
+            function clearCells() {
+                // Отключает все ячейки
+                cellsArray.forEach(cellElement => {
+                    cellElement.classList.remove("cell-active"); 
+                    cellElement.classList.add("cell-disabled");
+                }); 
+            }
+
+            function getStarsCount() {
+                const select = document.getElementById("minesCountSelect");
+                let trapsCount = select.options[select.selectedIndex].value;
+
+                const trapsToStarsMap = {
+                    "1": [5, 10],
+                    "2": [4, 7],
+                    "3": [3, 5]
+                }
+
+                const bounds = trapsToStarsMap[trapsCount];
+                const starsCount = generateNumber(bounds[0], bounds[1]);
+                return starsCount;
+            }
+
+            // Кнопка получения сигнала
+            getSignalButton.onclick = function() {
+                getSignalButton.disabled = true;
+
+                playAnim(getSignalButton, "small-on-click");  // Анимация прокрутки
+                clearCells();  // Очищаем ячейки
+
+                // Выбираем ячейки для активации
+                const signalIndexes = [];
+                const starsCount = getStarsCount();
+                    
+                while (signalIndexes.length < starsCount) {
+                    const cellIndex = generateNumber(0, cellsArray.length-1);
+
+                    if (signalIndexes.indexOf(cellIndex) === -1) {
+                        signalIndexes.push(cellIndex);
+                    }
+                }
+
+                // Активируем выбранные ячейки
+                signalIndexes.forEach(index => {
+                    const cellElement = cellsArray[index];
+                    
+                    // УБЕРИ ЭТУ СТРОКУ: playAnim(cellElement, "roll-cell");
+                    cellElement.classList.remove("cell-disabled"); 
+                    cellElement.classList.add("cell-active");
+                }); 
+
+                
+                setTimeout(() => {
+                    getSignalButton.disabled = false;
+                }, 500); // Ожидание полного завершения всех анимаций
+            }
+
+            // Кнопка рестарт
+            restartButton.onclick = function() {
+                const restartImg = restartButton.querySelector('.restart-img');
+                playAnim(restartImg, "spin-on-click"); // Анимируем только картинку
+                clearCells();  // Очищаем ячейки
+            }
+        </script>
+    </body>
+</html>
