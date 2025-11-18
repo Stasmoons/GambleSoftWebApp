@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Analyzer</title>
+    <style>
+        :root {
+            --primary-color: #8b5cf6;
+            --secondary-color: #a78bfa;
+            --background-color: #0f0f23;
+            --card-color: #1a1a2e;
+            --text-color: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(167, 139, 250, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 5px;
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 5px;
+            box-shadow: var(--shadow);
+        }
+
+        .language-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .language-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            width: 100%;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: rgba(26, 26, 46, 0.7);
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .upload-area.has-image {
+            padding: 10px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(139, 92, 246, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #374151;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn:disabled::before {
+            display: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 92, 246, 0.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .analysis-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .analysis-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .loading {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-btn {
+            display: none;
+            /* display: flex; */
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1rem;
+            cursor: pointer;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            padding: 8px 0;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">S</div>
+                <span>SlotAnalyzer</span>
+            </div>
+            <div class="language-selector">
+                <button class="language-btn active" data-lang="ru">RU</button>
+                <button class="language-btn" data-lang="en">EN</button>
+            </div>
+        </header>
+
+        <div class="card" id="upload-screen">
+            <h1 data-i18n="title">Анализ слота</h1>
+            <p class="subtitle" data-i18n="subtitle">Загрузите скриншот слота для анализа:</p>
+            
+            <div class="upload-area" id="upload-area">
+                <img id="preview-image" class="preview-image" alt="Предпросмотр">
+                <div id="upload-content">
+                    <div class="upload-icon">📸</div>
+                    <div class="upload-text" data-i18n="upload-text">Нажмите для загрузки изображения</div>
+                    <!-- <div class="upload-hint" data-i18n="upload-hint">Поддерживаемые форматы: PNG, JPG, JPEG</div> -->
+                </div>
+                <input type="file" id="file-input" accept="image/*">
+            </div>
+            
+            <button class="btn" id="analyze-btn" disabled data-i18n="analyze-btn">Анализировать</button>
+        </div>
+
+        <div class="loading" id="loading-screen">
+            <div class="spinner"></div>
+            <p data-i18n="analyzing">Анализ слота...</p>
+        </div>
+
+        <div class="card analysis-container" id="result-screen">
+            <button class="back-btn" id="back-btn">
+                <span>←</span> <span data-i18n="back">Назад</span>
+            </button>
+            
+            <h1 data-i18n="result-title">Результаты анализа</h1>
+            
+            <div class="result-item">
+                <span class="result-label" data-i18n="spins-label">Через спинов:</span>
+                <span class="result-value" id="spins-value">25</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label" data-i18n="probability-label">Вероятность:</span>
+                <span class="result-value" id="probability-value">78%</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label" data-i18n="bet-label">Рекомендуемая ставка:</span>
+                <span class="result-value" id="bet-value">15$</span>
+            </div>
+            
+            <button class="btn" id="try-again-btn" data-i18n="try-again">Ещё раз</button>
+        </div>
+    </div>
+
+    <footer>
+        <p data-i18n="footer">Приложение для анализа игровых слотов | BETA версия</p>
+    </footer>
+
+    <script>
+        // Переводы для интерфейса
+        const translations = {
+            ru: {
+                "title": "Анализ слота",
+                "subtitle": "Загрузите скриншот игры для анализа:",
+                "upload-text": "Нажмите для загрузки изображения",
+                "upload-hint": "Поддерживаемые форматы: PNG, JPG, JPEG",
+                "analyze-btn": "Анализировать",
+                "analyzing": "Анализ слота...",
+                "back": "Назад",
+                "result-title": "Результаты анализа",
+                "spins-label": "Через спинов:",
+                "probability-label": "Вероятность:",
+                "bet-label": "Рекомендуемая ставка:",
+                "try-again": "Ещё раз",
+                "footer": "Приложение для анализа игровых слотов | BETA версия"
+            },
+            en: {
+                "title": "Slot Analysis",
+                "subtitle": "Upload a screenshot of the game to analyze:",
+                "upload-text": "Click to upload an image",
+                "upload-hint": "Supported formats: PNG, JPG, JPEG",
+                "analyze-btn": "Analyze",
+                "analyzing": "Analyzing slot...",
+                "back": "Back",
+                "result-title": "Analysis Results",
+                "spins-label": "Spins in:",
+                "probability-label": "Probability:",
+                "bet-label": "Recommended bet:",
+                "try-again": "Try Again",
+                "footer": "Slot Game Analyzer | BETA version"
+            }
+        };
+
+        // Элементы DOM
+        const uploadScreen = document.getElementById('upload-screen');
+        const loadingScreen = document.getElementById('loading-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const fileInput = document.getElementById('file-input');
+        const uploadArea = document.getElementById('upload-area');
+        const uploadContent = document.getElementById('upload-content');
+        const previewImage = document.getElementById('preview-image');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const backBtn = document.getElementById('back-btn');
+        const tryAgainBtn = document.getElementById('try-again-btn');
+        const languageBtns = document.querySelectorAll('.language-btn');
+        
+        // Элементы для отображения результатов
+        const spinsValue = document.getElementById('spins-value');
+        const probabilityValue = document.getElementById('probability-value');
+        const betValue = document.getElementById('bet-value');
+        
+        // Текущий язык
+        let currentLang = 'ru';
+        
+        // Смена языка
+        languageBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Убираем активный класс у всех кнопок
+                languageBtns.forEach(b => b.classList.remove('active'));
+                // Добавляем активный класс к нажатой кнопке
+                btn.classList.add('active');
+                // Устанавливаем текущий язык
+                currentLang = btn.getAttribute('data-lang');
+                // Обновляем текст на странице
+                updateLanguage();
+            });
+        });
+        
+        // Обновление текста на странице в соответствии с выбранным языком
+        function updateLanguage() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
+        }
+        
+        // Обработчик клика по области загрузки
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // Обработчик выбора файла
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Показываем превью изображения
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    uploadContent.style.display = 'none';
+                    uploadArea.classList.add('has-image');
+                    
+                    // Активируем кнопку анализа
+                    analyzeBtn.disabled = false;
+                    uploadArea.style.borderColor = 'var(--primary-color)';
+                    uploadArea.style.backgroundColor = 'rgba(139, 92, 246, 0.05)';
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Обработчик кнопки анализа
+        analyzeBtn.addEventListener('click', () => {
+            // Показываем экран загрузки
+            uploadScreen.style.display = 'none';
+            loadingScreen.style.display = 'flex';
+            
+            // Имитируем процесс анализа (3 секунды)
+            setTimeout(() => {
+                // Генерируем случайные результаты
+                const spins = Math.floor(Math.random() * (145 - 15 + 1)) + 15;
+                const probability = Math.floor(Math.random() * (95 - 58 + 1)) + 58;
+                const bet = Math.floor(Math.random() * (25 - 1 + 1)) + 1;
+                
+                // Обновляем значения на странице
+                spinsValue.textContent = spins;
+                probabilityValue.textContent = `${probability}%`;
+                betValue.textContent = `${bet}$`;
+                
+                // Показываем экран результатов
+                loadingScreen.style.display = 'none';
+                resultScreen.style.display = 'block';
+            }, 3000);
+        });
+        
+        // Обработчик кнопки "Назад"
+        backBtn.addEventListener('click', () => {
+            resultScreen.style.display = 'none';
+            uploadScreen.style.display = 'block';
+            resetForm();
+        });
+        
+        // Обработчик кнопки "Ещё раз"
+        tryAgainBtn.addEventListener('click', () => {
+            resultScreen.style.display = 'none';
+            uploadScreen.style.display = 'block';
+            resetForm();
+        });
+        
+        // Сброс формы
+        function resetForm() {
+            fileInput.value = '';
+            analyzeBtn.disabled = true;
+            previewImage.style.display = 'none';
+            uploadContent.style.display = 'block';
+            uploadArea.classList.remove('has-image');
+            uploadArea.style.borderColor = 'var(--secondary-color)';
+            uploadArea.style.backgroundColor = 'rgba(26, 26, 46, 0.7)';
+        }
+    </script>
+</body>
+</html>
