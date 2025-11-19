@@ -6,8 +6,11 @@
     <title>Slot Analyzer</title>
     <style>
         :root {
-            --primary-color: #8b5cf6;
-            --secondary-color: #a78bfa;
+            --primary-color: #ffffff;
+            --secondary-color: #4b5563;
+            --accent-color: #9ca3af;
+            --accent-yellow: #f9ff3e;
+            --accent-green: #43ff2a;
             --background-color: #0f0f23;
             --card-color: #1a1a2e;
             --text-color: #e2e8f0;
@@ -33,8 +36,8 @@
             align-items: center;
             padding: 20px;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(167, 139, 250, 0.05) 0%, transparent 20%);
+                radial-gradient(circle at 10% 20%, rgba(107, 114, 128, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(75, 85, 99, 0.05) 0%, transparent 20%);
         }
 
         .container {
@@ -63,7 +66,7 @@
         .logo-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -93,7 +96,7 @@
         }
 
         .language-btn.active {
-            background-color: var(--primary-color);
+            background-color: var(--text-secondary);
             color: white;
         }
 
@@ -106,16 +109,132 @@
             text-align: center;
             transition: var(--transition);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
         }
 
         .subtitle {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .subtitle.hidden {
+            display: none;
         }
 
         h1 {
             margin-bottom: 20px;
             color: var(--primary-color);
             font-size: 1.8rem;
+        }
+
+        .slot-selector {
+            margin-bottom: 20px;
+            text-align: left;
+            transition: var(--transition);
+        }
+
+        .slot-selector.hidden {
+            display: none;
+        }
+
+        .slot-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select select {
+            display: none;
+        }
+
+        .select-selected {
+            background-color: rgba(26, 26, 46, 0.8);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .select-selected:after {
+            position: absolute;
+            content: "";
+            top: 50%;
+            right: 16px;
+            width: 0;
+            height: 0;
+            border: 6px solid transparent;
+            border-color: var(--text-color) transparent transparent transparent;
+            transform: translateY(-50%);
+        }
+
+        .select-selected.select-arrow-active:after {
+            border-color: transparent transparent var(--text-color) transparent;
+            top: 40%;
+        }
+
+        .select-items {
+            position: absolute;
+            background-color: var(--card-color);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 4px;
+        }
+
+        .select-hide {
+            display: none;
+        }
+
+        .select-items div {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .select-items div:last-child {
+            border-bottom: none;
+        }
+
+        .select-items div:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .same-as-selected {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .slot-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slot-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+            border-radius: 4px;
         }
 
         .upload-area {
@@ -132,6 +251,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
         .upload-area.has-image {
@@ -140,7 +260,7 @@
 
         .upload-area:hover {
             border-color: var(--primary-color);
-            background-color: rgba(139, 92, 246, 0.05);
+            background-color: rgba(107, 114, 128, 0.05);
         }
 
         .upload-icon {
@@ -168,16 +288,17 @@
             max-height: 300px;
             border-radius: 8px;
             display: none;
+            transition: var(--transition);
         }
 
         .btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
+            background: var(--accent-yellow);
+            color: var(--background-color);
             border: none;
             border-radius: var(--border-radius);
             padding: 14px 28px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 1000;
             cursor: pointer;
             transition: var(--transition);
             width: 100%;
@@ -193,7 +314,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: 0.5s;
         }
 
@@ -203,7 +324,7 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 6px 15px rgba(251, 191, 36, 0.4);
         }
 
         .btn:active {
@@ -222,33 +343,80 @@
             display: none;
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--primary-color);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(139, 92, 246, 0.1);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .analysis-container {
+        .analysis-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 15, 35, 0.7);
             display: none;
-            margin-top: 20px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: var(--border-radius);
+            z-index: 10;
         }
 
-        .analysis-title {
-            font-size: 1.3rem;
+        .analysis-overlay.active {
+            display: flex;
+        }
+
+        .analysis-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-yellow);
             margin-bottom: 20px;
-            color: var(--primary-color);
+        }
+
+        .dots {
+            display: inline-block;
+            width: 20px;
+            text-align: left;
+        }
+
+        .dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .result-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 15, 35, 0.85);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: var(--border-radius);
+            z-index: 20;
+            padding: 15px;
+            overflow-y: auto;
+            pointer-events: none;
+        }
+
+        .result-overlay.active {
+            display: flex;
         }
 
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 15px 0;
+            padding: 12px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 280px;
+            min-height: 44px;
         }
 
         .result-item:last-child {
@@ -257,52 +425,18 @@
 
         .result-label {
             font-weight: 500;
+            font-size: 0.95rem;
         }
 
         .result-value {
             font-weight: 700;
             color: var(--primary-color);
+            font-size: 0.95rem;
         }
 
-        .loading {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            margin: 30px 0;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(139, 92, 246, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .back-btn {
-            display: none;
-            /* display: flex; */
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1rem;
-            cursor: pointer;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 20px;
-            font-weight: 500;
-            padding: 8px 0;
-        }
-
-        .back-btn:hover {
-            text-decoration: underline;
+        .blurred {
+            filter: blur(1px);
+            opacity: 0.9;
         }
 
         footer {
@@ -312,20 +446,17 @@
             font-size: 0.8rem;
         }
 
-        .pulse {
-            animation: pulse 2s infinite;
+        .button-container {
+            position: relative;
+            width: 100%;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
-            }
+        #try-again-btn {
+            display: none;
+        }
+
+        .text-highlight {
+            color: var(--accent-green)
         }
     </style>
 </head>
@@ -333,8 +464,7 @@
     <div class="container">
         <header>
             <div class="logo">
-                <div class="logo-icon">S</div>
-                <span>SlotAnalyzer</span>
+                <span>Slot<span class="text-highlight">Analyzer</span></span>
             </div>
             <div class="language-selector">
                 <button class="language-btn active" data-lang="ru">RU</button>
@@ -344,49 +474,56 @@
 
         <div class="card" id="upload-screen">
             <h1 data-i18n="title">Анализ слота</h1>
-            <p class="subtitle" data-i18n="subtitle">Загрузите скриншот слота для анализа:</p>
+            <p class="subtitle" id="subtitle-text" data-i18n="subtitle">Выберите слот и загрузите скриншот для анализа:</p>
+            
+            <div class="slot-selector" id="slot-selector">
+                <div class="custom-select">
+                    <select id="slot-select">
+                        <option value="">Выберите слот</option>
+                    </select>
+                    <div class="select-selected">
+                        <span data-i18n="choose-slot">Выберите слот</span>
+                    </div>
+                    <div class="select-items select-hide"></div>
+                </div>
+            </div>
             
             <div class="upload-area" id="upload-area">
                 <img id="preview-image" class="preview-image" alt="Предпросмотр">
                 <div id="upload-content">
                     <div class="upload-icon">📸</div>
                     <div class="upload-text" data-i18n="upload-text">Нажмите для загрузки изображения</div>
-                    <!-- <div class="upload-hint" data-i18n="upload-hint">Поддерживаемые форматы: PNG, JPG, JPEG</div> -->
                 </div>
                 <input type="file" id="file-input" accept="image/*">
+                
+                <div class="analysis-overlay" id="analysis-overlay">
+                    <div class="analysis-text" data-i18n="analyzing">АНАЛИЗ<span class="dots"></span></div>
+                </div>
+                
+                <div class="result-overlay" id="result-overlay">
+                    <div class="result-title" data-i18n="result-title">Результаты анализа</div>
+                    
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="spins-label">Через спинов:</span>
+                        <span class="result-value" id="spins-value">25</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="probability-label">Вероятность:</span>
+                        <span class="result-value" id="probability-value">78%</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="bet-label">Рекомендуемая ставка:</span>
+                        <span class="result-value" id="bet-value">15$</span>
+                    </div>
+                </div>
             </div>
             
-            <button class="btn" id="analyze-btn" disabled data-i18n="analyze-btn">Анализировать</button>
-        </div>
-
-        <div class="loading" id="loading-screen">
-            <div class="spinner"></div>
-            <p data-i18n="analyzing">Анализ слота...</p>
-        </div>
-
-        <div class="card analysis-container" id="result-screen">
-            <button class="back-btn" id="back-btn">
-                <span>←</span> <span data-i18n="back">Назад</span>
-            </button>
-            
-            <h1 data-i18n="result-title">Результаты анализа</h1>
-            
-            <div class="result-item">
-                <span class="result-label" data-i18n="spins-label">Через спинов:</span>
-                <span class="result-value" id="spins-value">25</span>
+            <div class="button-container">
+                <button class="btn" id="analyze-btn" disabled data-i18n="analyze-btn">Анализировать</button>
+                <button class="btn" id="try-again-btn" data-i18n="try-again">Ещё раз</button>
             </div>
-            
-            <div class="result-item">
-                <span class="result-label" data-i18n="probability-label">Вероятность:</span>
-                <span class="result-value" id="probability-value">78%</span>
-            </div>
-            
-            <div class="result-item">
-                <span class="result-label" data-i18n="bet-label">Рекомендуемая ставка:</span>
-                <span class="result-value" id="bet-value">15$</span>
-            </div>
-            
-            <button class="btn" id="try-again-btn" data-i18n="try-again">Ещё раз</button>
         </div>
     </div>
 
@@ -399,12 +536,11 @@
         const translations = {
             ru: {
                 "title": "Анализ слота",
-                "subtitle": "Загрузите скриншот игры для анализа:",
+                "subtitle": "Выберите слот и загрузите скриншот для анализа:",
+                "choose-slot": "Выберите слот",
                 "upload-text": "Нажмите для загрузки изображения",
-                "upload-hint": "Поддерживаемые форматы: PNG, JPG, JPEG",
                 "analyze-btn": "Анализировать",
-                "analyzing": "Анализ слота...",
-                "back": "Назад",
+                "analyzing": "АНАЛИЗ",
                 "result-title": "Результаты анализа",
                 "spins-label": "Через спинов:",
                 "probability-label": "Вероятность:",
@@ -414,12 +550,11 @@
             },
             en: {
                 "title": "Slot Analysis",
-                "subtitle": "Upload a screenshot of the game to analyze:",
+                "subtitle": "Select a slot and upload a screenshot for analysis:",
+                "choose-slot": "Choose slot",
                 "upload-text": "Click to upload an image",
-                "upload-hint": "Supported formats: PNG, JPG, JPEG",
                 "analyze-btn": "Analyze",
-                "analyzing": "Analyzing slot...",
-                "back": "Back",
+                "analyzing": "ANALYZING",
                 "result-title": "Analysis Results",
                 "spins-label": "Spins in:",
                 "probability-label": "Probability:",
@@ -429,18 +564,86 @@
             }
         };
 
+        // Данные слотов с правильными путями к изображениям
+        const slotsData = [
+            {
+                id: 'gates-of-olympus',
+                name: 'Gates Of Olympus',
+                icon: './static/slots/Gates_Of_Olympus.jpg',
+            },
+            {
+                id: 'sweet-bananza',
+                name: 'Bananza Sweet',
+                icon: './static/slots/Bananza_Sweet.jpg',
+            },
+            {
+                id: 'the-dog-house',
+                name: 'The Dog House',
+                icon: './static/slots/The_Dog_House.jpg',
+            },
+            {
+                id: 'big-bass',
+                name: 'Big Bass',
+                icon: './static/slots/Big_Bass.jpg',
+            },
+            {
+                id: 'sugar-rush',
+                name: 'Shugar Rush',
+                icon: './static/slots/Shugar_Rush.jpg',
+            },
+            {
+                id: 'wild-west-gold',
+                name: 'Wild West Gold',
+                icon: './static/slots/Wild_West_Gold.jpg',
+            },
+            {
+                id: 'zeus-vs-hades',
+                name: 'Zeus vs Hades (Gods of War)',
+                icon: './static/slots/Zeus_vs_Hades_(Gods_of_War).jpg',
+            },
+            {
+                id: 'fortune',
+                name: 'Fortune',
+                icon: './static/slots/Fortune.jpg',
+            },
+            {
+                id: 'slot-666',
+                name: '666 slot',
+                icon: './static/slots/666_slot.jpg',
+            },
+            {
+                id: 'raging-waterfall',
+                name: 'Raging Waterfall',
+                icon: './static/slots/Raging_Waterfall.jpg',
+            },
+            {
+                id: 'big-stack-lumberjack',
+                name: 'Big Stack Lumberjack',
+                icon: './static/slots/Big_Stack_Lumberjack.jpg',
+            },
+            {
+                id: 'other',
+                name: 'ДРУГОЙ СЛОТ / ANOTHER SLOT',
+                icon: '',
+            }
+        ];
+
         // Элементы DOM
         const uploadScreen = document.getElementById('upload-screen');
-        const loadingScreen = document.getElementById('loading-screen');
-        const resultScreen = document.getElementById('result-screen');
         const fileInput = document.getElementById('file-input');
         const uploadArea = document.getElementById('upload-area');
         const uploadContent = document.getElementById('upload-content');
         const previewImage = document.getElementById('preview-image');
         const analyzeBtn = document.getElementById('analyze-btn');
-        const backBtn = document.getElementById('back-btn');
         const tryAgainBtn = document.getElementById('try-again-btn');
         const languageBtns = document.querySelectorAll('.language-btn');
+        const analysisOverlay = document.getElementById('analysis-overlay');
+        const resultOverlay = document.getElementById('result-overlay');
+        const slotSelect = document.getElementById('slot-select');
+        const slotSelector = document.getElementById('slot-selector');
+        const subtitleText = document.getElementById('subtitle-text');
+        const selectSelected = document.querySelector('.select-selected');
+        const selectItems = document.querySelector('.select-items');
         
         // Элементы для отображения результатов
         const spinsValue = document.getElementById('spins-value');
@@ -449,6 +652,72 @@
         
         // Текущий язык
         let currentLang = 'ru';
+        
+        // Функция для генерации ставки кратной 0.2
+        function generateBet() {
+            const min = 0.2;
+            const max = 5;
+            // Генерируем число от 1 до 25 (0.2 * 25 = 5)
+            const multiplier = Math.floor(Math.random() * 25) + 1;
+            return (multiplier * 0.2).toFixed(1);
+        }
+        
+        // Инициализация кастомного селекта
+        function initializeCustomSelect() {
+            // Добавляем опции в селект
+            slotsData.forEach(slot => {
+                const option = document.createElement('option');
+                option.value = slot.id;
+                option.textContent = slot.name;
+                slotSelect.appendChild(option);
+            });
+
+            // Создаем элементы для выпадающего списка
+            slotsData.forEach(slot => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="slot-option">
+                        <img src="${slot.icon}" alt="${slot.name}" class="slot-icon" onerror="this.style.display='none'">
+                        <span>${slot.name}</span>
+                    </div>
+                `;
+                div.addEventListener('click', function() {
+                    slotSelect.value = slot.id;
+                    selectSelected.innerHTML = `
+                        <img src="${slot.icon}" alt="${slot.name}" class="slot-icon" onerror="this.style.display='none'">
+                        <span>${slot.name}</span>
+                    `;
+                    selectItems.classList.add('select-hide');
+                    selectSelected.classList.remove('select-arrow-active');
+                    
+                    checkAnalyzeButton();
+                });
+                selectItems.appendChild(div);
+            });
+
+            // Обработчик клика по селекту
+            selectSelected.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectItems.classList.toggle('select-hide');
+                selectSelected.classList.toggle('select-arrow-active');
+            });
+
+            // Закрытие выпадающего списка при клике вне его
+            document.addEventListener('click', function() {
+                selectItems.classList.add('select-hide');
+                selectSelected.classList.remove('select-arrow-active');
+            });
+        }
+        
+        // Обновление текста на странице в соответствии с выбранным языком
+        function updateLanguage() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
+        }
         
         // Смена языка
         languageBtns.forEach(btn => {
@@ -464,19 +733,12 @@
             });
         });
         
-        // Обновление текста на странице в соответствии с выбранным языком
-        function updateLanguage() {
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[currentLang][key]) {
-                    element.textContent = translations[currentLang][key];
-                }
-            });
-        }
-        
         // Обработчик клика по области загрузки
         uploadArea.addEventListener('click', () => {
-            fileInput.click();
+            // Проверяем, не отображаются ли результаты
+            if (!resultOverlay.classList.contains('active')) {
+                fileInput.click();
+            }
         });
         
         // Обработчик выбора файла
@@ -492,64 +754,97 @@
                     uploadContent.style.display = 'none';
                     uploadArea.classList.add('has-image');
                     
-                    // Активируем кнопку анализа
-                    analyzeBtn.disabled = false;
+                    // Активируем кнопку анализа если выбран слот
+                    checkAnalyzeButton();
                     uploadArea.style.borderColor = 'var(--primary-color)';
-                    uploadArea.style.backgroundColor = 'rgba(139, 92, 246, 0.05)';
+                    uploadArea.style.backgroundColor = 'rgba(107, 114, 128, 0.05)';
                 };
                 
                 reader.readAsDataURL(file);
             }
         });
         
+        // Проверка возможности активации кнопки анализа
+        function checkAnalyzeButton() {
+            if (slotSelect.value && fileInput.files.length > 0) {
+                analyzeBtn.disabled = false;
+            } else {
+                analyzeBtn.disabled = true;
+            }
+        }
+        
         // Обработчик кнопки анализа
         analyzeBtn.addEventListener('click', () => {
-            // Показываем экран загрузки
-            uploadScreen.style.display = 'none';
-            loadingScreen.style.display = 'flex';
+            // Блокируем кнопку анализа
+            analyzeBtn.disabled = true;
+            
+            // Скрываем выбор слота и подзаголовок
+            slotSelector.classList.add('hidden');
+            subtitleText.classList.add('hidden');
+            
+            // Делаем изображение мутным и показываем оверлей анализа
+            previewImage.classList.add('blurred');
+            analysisOverlay.classList.add('active');
             
             // Имитируем процесс анализа (3 секунды)
             setTimeout(() => {
                 // Генерируем случайные результаты
                 const spins = Math.floor(Math.random() * (145 - 15 + 1)) + 15;
                 const probability = Math.floor(Math.random() * (95 - 58 + 1)) + 58;
-                const bet = Math.floor(Math.random() * (25 - 1 + 1)) + 1;
+                const bet = generateBet(); // Используем новую функцию для генерации ставки
                 
                 // Обновляем значения на странице
                 spinsValue.textContent = spins;
                 probabilityValue.textContent = `${probability}%`;
                 betValue.textContent = `${bet}$`;
                 
-                // Показываем экран результатов
-                loadingScreen.style.display = 'none';
-                resultScreen.style.display = 'block';
+                // Скрываем оверлей анализа и показываем результаты поверх картинки
+                analysisOverlay.classList.remove('active');
+                resultOverlay.classList.add('active');
+                
+                // Показываем кнопку "Ещё раз" вместо "Анализировать"
+                analyzeBtn.style.display = 'none';
+                tryAgainBtn.style.display = 'block';
             }, 3000);
-        });
-        
-        // Обработчик кнопки "Назад"
-        backBtn.addEventListener('click', () => {
-            resultScreen.style.display = 'none';
-            uploadScreen.style.display = 'block';
-            resetForm();
         });
         
         // Обработчик кнопки "Ещё раз"
         tryAgainBtn.addEventListener('click', () => {
-            resultScreen.style.display = 'none';
-            uploadScreen.style.display = 'block';
+            // Скрываем результаты
+            resultOverlay.classList.remove('active');
+            previewImage.classList.remove('blurred');
+            
+            // Показываем выбор слота и подзаголовок снова
+            slotSelector.classList.remove('hidden');
+            subtitleText.classList.remove('hidden');
+            
+            // Показываем кнопку "Анализировать" вместо "Ещё раз"
+            tryAgainBtn.style.display = 'none';
+            analyzeBtn.style.display = 'block';
+            
+            // Сбрасываем форму
             resetForm();
         });
         
         // Сброс формы
         function resetForm() {
             fileInput.value = '';
+            slotSelect.value = '';
             analyzeBtn.disabled = true;
             previewImage.style.display = 'none';
             uploadContent.style.display = 'block';
             uploadArea.classList.remove('has-image');
             uploadArea.style.borderColor = 'var(--secondary-color)';
             uploadArea.style.backgroundColor = 'rgba(26, 26, 46, 0.7)';
+            selectSelected.innerHTML = '<span data-i18n="choose-slot">Выберите слот</span>';
+            updateLanguage();
         }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCustomSelect();
+            updateLanguage();
+        });
     </script>
 </body>
 </html>
